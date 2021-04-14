@@ -52,4 +52,9 @@ final class AccountStatus
     {
         return new self(self::IN_OPERATION);
     }
+
+    public function isApplying()
+    {
+        return $this->rawValue === self::APPLYING;
+    }
 }

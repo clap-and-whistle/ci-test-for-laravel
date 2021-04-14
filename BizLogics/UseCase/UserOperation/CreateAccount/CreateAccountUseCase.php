@@ -32,6 +32,13 @@ final class CreateAccountUseCase
     {
         $result = new Result();
         try {
+            $userId = $this->userRepo->getUserIdByEmail($email);
+            if ($userId > 0) {
+                throw $this->userRepo->isApplying($userId)
+                    ? new ApplyingException()
+                    : new EmailAlreadyUsedException();
+            }
+
             $user = User::buildForCreate($email, $password);
             $this->userRepo->save($user);
         } catch (ApplyingException $e) {
