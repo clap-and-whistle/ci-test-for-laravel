@@ -37,6 +37,11 @@ final class CreateAccountUseCaseTest extends BaseTestCase
 
         $result = $useCase->execute($email, $password);
         if (!$result->isSuccess()) var_dump([__METHOD__=>['eMessage'=>$result->eMessage()]]);
+        var_dump([__METHOD__=>[
+            '$email'=>$email,
+            '$password'=>$password,
+            'masterAccountList'=>$this->userRepo->getMasterAccountList(),
+        ]]);
 
         self::assertTrue($result->isSuccess());
 
