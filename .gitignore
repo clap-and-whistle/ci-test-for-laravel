@@ -10,7 +10,6 @@
 .env
 .env.backup
 /bootstrap/cache
-/storage/framework/views
 /storage/logs
 docker-compose.override.yml
 Homestead.json
@@ -20,5 +19,5 @@ yarn-error.log
 
 # for custom
 *.asta.lock
+!/bootstrap/cache/.gitkeep
 /storage/database.sqlite
-

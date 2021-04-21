@@ -7,3 +7,11 @@ routes.php
 routes.scanned.php
 schedule-*
 services.json
+
+cache/data/*
+!cache/data/.gitkeep
+
+sessions/*
+testing/*
+views/*
+!*/.gitkeep
