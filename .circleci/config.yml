@@ -68,9 +68,9 @@ jobs:
       - run:
           name: setup basic packages
           command: |
-            sudo apt update
-            sudo apt-get -y install git unzip libzip-dev libicu-dev libonig-dev zlib1g-dev
-            sudo docker-php-ext-install zip
+            apt update
+            apt-get -y install git unzip libzip-dev libicu-dev libonig-dev zlib1g-dev
+            docker-php-ext-install zip
 
       - run: echo "Hello World"
 
@@ -87,3 +87,7 @@ workflows:
       - deploy:
           requires:
             - build
+          filters:
+            branches:
+              only:
+                - staging
