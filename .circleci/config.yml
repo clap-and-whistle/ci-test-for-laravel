@@ -65,6 +65,13 @@ jobs:
       - image: php:7.4.16-apache-buster
 
     steps:
+      - run:
+          name: setup basic packages
+          command: |
+            sudo apt update
+            sudo apt-get -y install git unzip libzip-dev libicu-dev libonig-dev zlib1g-dev
+            sudo docker-php-ext-install zip
+
       - run: echo "Hello World"
 
 workflows:
