@@ -81,7 +81,9 @@ workflows:
       - build:
           filters:
             branches:
-              only: staging
+              only:
+                - staging
+                - /^topic\/.*/
       - deploy:
           requires:
             - build
