@@ -8,7 +8,6 @@ jobs:
   build:
     docker:
       - image: circleci/php:7.4.9-apache-buster
-    working_directory: ~/circleci-demo-workflows
 
     steps:
       - checkout
@@ -25,7 +24,7 @@ jobs:
       - run:
           name: Install Node
           command: |
-            curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+            curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
             sudo apt-get install -y nodejs
 
       # composer cache
@@ -61,14 +60,12 @@ jobs:
       - run: touch ./database/database.sqlite
       - run: php artisan migrate --env=testing --force
 
-  test:
+  deploy:
     docker:
-      - image: circleci/php:7.4.9-apache-buster
-    working_directory: ~/circleci-demo-workflows
+      - image: php:7.4.16-apache-buster
 
     steps:
-      # run tests with phpunit or codecept
-      - run: ./vendor/bin/phpunit
+      - run: echo "Hello World"
 
 workflows:
   version: 2
@@ -78,6 +75,6 @@ workflows:
           filters:
             branches:
               only: staging
-      - test:
+      - deploy:
           requires:
             - build
