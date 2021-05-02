@@ -59,3 +59,7 @@ jobs:
 #      # prepare the database
 #      - run: touch ./database/database.sqlite
 #      - run: php artisan migrate --env=testing --force
+
+      - run:
+          name: run tests with phpunit
+          command: php ./vendor/bin/phpunit tests
