@@ -7,7 +7,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/php:8.0.3-apache-buster
+      - image: cwdevwork/cw_php8fpm-buster:v0.0.1
 
     steps:
       - checkout
