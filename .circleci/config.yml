@@ -7,25 +7,10 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/php:8.0.3-apache-buster
+      - image: cwdevwork/cw_php8fpm-buster:v0.0.1
 
     steps:
       - checkout
-
-      - run:
-          name: setup using sqlite
-          command: |
-            sudo apt update
-            sudo apt-get -y install git unzip libzip-dev libicu-dev libonig-dev zlib1g-dev sqlite3 libsqlite3-dev
-            sudo docker-php-ext-install zip
-            sudo docker-php-ext-install pdo_sqlite
-            sudo docker-php-ext-enable pdo_sqlite
-
-      - run:
-          name: Install Node
-          command: |
-            curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
-            sudo apt-get install -y nodejs
 
       # composer cache
       - restore_cache:
