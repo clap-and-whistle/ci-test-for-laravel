@@ -32,6 +32,18 @@ final class ForTestUserAggregateRepository implements UserAggregateRepositoryInt
      */
     private function __construct()
     {
+        $this->save(new User(
+            self::例外用_ユーザID_1_申請中,
+            self::例外用_ユーザID_1_申請中メールアドレス,
+            self::テスト用Password,
+            AccountStatus::applying()->raw()
+        ));
+        $this->save(new User(
+            self::例外用_ユーザID_2_既に使用中,
+            self::例外用_ユーザID_2_既に使用されているメールアドレス,
+            self::テスト用Password,
+            AccountStatus::inOperation()->raw()
+        ));
     }
 
     public static function getInstance(): self

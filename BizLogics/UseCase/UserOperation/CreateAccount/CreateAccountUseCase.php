@@ -31,8 +31,12 @@ final class CreateAccountUseCase
     {
         $result = new Result();
         try {
-            $userId = 0;
-//            $result->setFailure(new \RuntimeException('hoge'), '');
+            $userId = $this->userRepos->getUserIdByEmail($email);
+            if ($userId > 0) {
+                throw ($this->userRepos->isApplying($userId))
+                    ? new ApplyingException()
+                    : new EmailAlreadyUsedException();
+            }
             $user = User::buildForCreate($email, $password);
             $this->userRepos->save($user);
         } catch (ApplyingException $e) {
