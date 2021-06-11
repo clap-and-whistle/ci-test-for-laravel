@@ -7,14 +7,11 @@ use RuntimeException;
 
 final class Result
 {
-    /** @var bool */
-    private $success = true;
+    private bool $success = true;
 
-    /** @var RuntimeException */
-    private $exception;
+    private ?RuntimeException $exception;
 
-    /** @var string */
-    private $eMessage;
+    private string $eMessage;
 
     public function isSuccess(): bool
     {
@@ -27,5 +24,15 @@ final class Result
         $this->exception = $exception;
         $this->eMessage = $eMessage;
         return $this;
+    }
+
+    public function exception(): ?RuntimeException
+    {
+        return $this->exception ?? null;
+    }
+
+    public function eMessage(): string
+    {
+        return $this->eMessage ?? '';
     }
 }
