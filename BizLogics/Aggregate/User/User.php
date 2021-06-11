@@ -18,12 +18,26 @@ final class User
     /**
      * User constructor.
      */
-    public function __construct(int $id, string $email, string $password, int $accountStatus)
+    private function __construct(int $id, string $email, string $password, int $accountStatus)
     {
         $this->id = $id;
         $this->email = $email;
         $this->password = $password;
         $this->accountStatus = AccountStatus::getByRaw($accountStatus);
+    }
+
+    /**
+     * テスト用データの作成を必要としているクラスでなら使って良い
+     * @deprecated
+     */
+    public static function buildForTestData(int $id, string $email, string $password, int $accountStatus): self
+    {
+        return new self($id, $email, $password, $accountStatus);
+    }
+
+    public static function buildForFind(int $id, string $email, int $accountStatus): self
+    {
+        return new self($id, $email, '', $accountStatus);
     }
 
     public static function buildForCreate(string $email, string $password): self
