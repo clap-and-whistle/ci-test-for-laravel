@@ -12,9 +12,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/**
+ * 認証不要なページ群
+ */
 use App\Http\Controllers\Open\HomeController;
 
 Route::namespace('OpenWeb')->group(function () {
     Route::get('/', [HomeController::class, 'indexAction'])->name('SiteTop');
     Route::get('/e', [HomeController::class, 'ErrorAction'])->name('FallbackAll');
+});
+
+/**
+ * ユーザによるアカウント操作系のページ群
+ */
+use App\Http\Controllers\UserOperation\CreateAccountController;
+
+Route::prefix('uam')->group(function () {
+
+        Route::get('/create-account/new', [CreateAccountController::class, 'newAction']);
 });
