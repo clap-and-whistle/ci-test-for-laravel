@@ -28,6 +28,6 @@ Route::namespace('OpenWeb')->group(function () {
 use App\Http\Controllers\UserOperation\CreateAccountController;
 
 Route::prefix('uam')->group(function () {
-
-        Route::get('/create-account/new', [CreateAccountController::class, 'newAction']);
+    Route::get('/create-account/new', [CreateAccountController::class, 'newAction']);
+    Route::post('/create-account/', [CreateAccountController::class, 'storeAction']);
 });
