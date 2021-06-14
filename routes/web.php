@@ -26,8 +26,11 @@ Route::namespace('OpenWeb')->group(function () {
  * ユーザによるアカウント操作系のページ群
  */
 use App\Http\Controllers\UserOperation\CreateAccountController;
+use App\Http\Controllers\UserOperation\LoginController;
 
 Route::prefix('uam')->group(function () {
     Route::get('/create-account/new', [CreateAccountController::class, 'newAction']);
     Route::post('/create-account/', [CreateAccountController::class, 'storeAction']);
+    Route::get('/login/input', [LoginController::class, 'inputAction']);
+    Route::post('/login/', [LoginController::class, 'execAction']);
 });
