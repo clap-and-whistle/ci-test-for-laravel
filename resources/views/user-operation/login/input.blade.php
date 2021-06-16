@@ -43,7 +43,7 @@
             </div>
             <div class="card-body">
                 <form method="post" action="/uam/login/">
-
+                    @csrf
                     <section class="text-gray-600 body-font relative">
                         <h1 class="text-4xl text-green-700 text-center font-semibold">ログイン</h1>
                         <div class="container px-5 py-5 mx-auto flex justify-center">

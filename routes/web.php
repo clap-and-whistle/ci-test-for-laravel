@@ -27,10 +27,13 @@ Route::namespace('OpenWeb')->group(function () {
  */
 use App\Http\Controllers\UserOperation\CreateAccountController;
 use App\Http\Controllers\UserOperation\LoginController;
+use App\Http\Controllers\UserOperation\LoginCompleteController;
 
 Route::prefix('uam')->group(function () {
     Route::get('/create-account/new', [CreateAccountController::class, 'newAction']);
     Route::post('/create-account/', [CreateAccountController::class, 'storeAction']);
-    Route::get('/login/input', [LoginController::class, 'inputAction']);
+    Route::get('/login/input', [LoginController::class, 'inputAction'])->name('login');
     Route::post('/login/', [LoginController::class, 'execAction']);
+    Route::get('/login-complete/', [LoginCompleteController::class, 'completeAction'])
+        ->middleware('auth');
 });
