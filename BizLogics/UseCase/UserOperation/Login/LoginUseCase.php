@@ -3,11 +3,17 @@ declare(strict_types=1);
 
 namespace Bizlogics\UseCase\UserOperation\Login;
 
+use App\Infrastructure\AggregateRepository\User\Exception\NotExistException;
+use App\Infrastructure\AggregateRepository\User\Exception\PasswordIsNotMatchException;
 use Bizlogics\Aggregate\UserAggregateRepositoryInterface;
+use Throwable;
 
 final class LoginUseCase
 {
     private UserAggregateRepositoryInterface $userRepos;
+
+    const E_MSG_NOT_EXISTS = "入力されたメールアドレスを使用するユーザはいません";
+    const E_MSG_PASSWORD_IS_NOT_MATCH = "パスワードが一致しません";
 
     /**
      * LoginUseCase constructor.
@@ -22,17 +28,17 @@ final class LoginUseCase
     {
         $result = new Result();
         try {
-            // TODO: Unitテストを書いてから適正化するので、ひとまず暫定例外を投げるだけ
-            throw new \RuntimeException();
-//            $authenticatable = $this->userRepos->checkAuth($email, $password);
+            $authenticatable = $this->userRepos->checkAuth($email, $password);
 
             // User集約インスタンスを構築できる状態であることを確認することもこのユースケースの責務の一つなので、
             // 下記の正常終了だけ確認する
-//            $this->userRepos->findById($authenticatable->getId());
+            $this->userRepos->findById($authenticatable->getId());
 
-//            $result->setAuthObj($authenticatable);
-        } catch (\RuntimeException $e) {
-            $result->setFailure($e, '仮実装');
+            $result->setAuthObj($authenticatable);
+        } catch (NotExistException $e) {
+            $result->setFailure($e, self::E_MSG_NOT_EXISTS);
+        } catch (PasswordIsNotMatchException $e) {
+            $result->setFailure($e, self::E_MSG_PASSWORD_IS_NOT_MATCH);
         }
 
         return $result;
