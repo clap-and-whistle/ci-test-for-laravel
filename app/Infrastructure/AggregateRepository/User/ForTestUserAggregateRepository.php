@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\AggregateRepository\User;
 
+use App\Infrastructure\AggregateRepository\User\Exception\NotExistException;
+use App\Infrastructure\AggregateRepository\User\Exception\PasswordIsNotMatchException;
 use Bizlogics\Aggregate\User\User;
 use Bizlogics\Aggregate\User\AccountStatus;
 use Bizlogics\Aggregate\UserAggregateRepositoryInterface;
+use Bizlogics\UseCase\UserOperation\Login\AuthenticatableInterface;
 use Exception;
 
 final class ForTestUserAggregateRepository implements UserAggregateRepositoryInterface
@@ -90,6 +93,11 @@ final class ForTestUserAggregateRepository implements UserAggregateRepositoryInt
         return false;
     }
 
+    public function findById(int $userId): ?User
+    {
+        return $this->userDao[$userId] ?? null;
+    }
+
     /**
      * @noinspection NonAsciiCharacters
      */
@@ -120,5 +128,25 @@ final class ForTestUserAggregateRepository implements UserAggregateRepositoryInt
             $r_str .= $str[random_int(0, count($str) - 1)];
         }
         return $r_str;
+    }
+
+    public function checkAuth(string $email, string $password): AuthenticatableInterface
+    {
+        $userId = $this->getUserIdByEmail($email);
+        if (!array_key_exists($userId, $this->userDao)) {
+            throw new NotExistException();
+        }
+        $userAggregate = $this->userDao[$userId];
+        if ($password !== $userAggregate->password()) {
+            throw new PasswordIsNotMatchException();
+        }
+        return new class($userAggregate)
+            implements AuthenticatableInterface
+            {
+                private User $userAggregate;
+                public function __construct(User $userAggregate) { $this->userAggregate = $userAggregate; }
+                public function getId(): int { return $this->userAggregate->id(); }
+            };
+
     }
 }
