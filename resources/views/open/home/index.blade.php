@@ -19,7 +19,7 @@
         <h3>UseCase</h3>
         <ul>
             <li><a href="./uam/create-account/new">Sing Up</a></li>
-            <li><a href="./uam/login">Login</a></li>
+            <li><a href="./uam/login/input">Login</a></li>
         </ul>
         <h3>for Debug</h3>
         <ul>
