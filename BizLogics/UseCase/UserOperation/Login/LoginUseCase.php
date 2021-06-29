@@ -6,6 +6,7 @@ namespace Bizlogics\UseCase\UserOperation\Login;
 use App\Infrastructure\AggregateRepository\User\Exception\NotExistException;
 use App\Infrastructure\AggregateRepository\User\Exception\PasswordIsNotMatchException;
 use Bizlogics\Aggregate\UserAggregateRepositoryInterface;
+use http\Exception\RuntimeException;
 use Throwable;
 
 final class LoginUseCase
@@ -32,7 +33,9 @@ final class LoginUseCase
 
             // User集約インスタンスを構築できる状態であることを確認することもこのユースケースの責務の一つなので、
             // 下記の正常終了だけ確認する
-            $this->userRepos->findById($authenticatable->getId());
+            if (!$this->userRepos->findById($authenticatable->getId())) {
+                throw new RuntimeException('集約インスタンスの構築に失敗しました');
+            }
 
             $result->setAuthObj($authenticatable);
         } catch (NotExistException $e) {
