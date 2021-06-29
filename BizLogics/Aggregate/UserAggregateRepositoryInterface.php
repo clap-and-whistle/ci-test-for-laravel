@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Bizlogics\Aggregate;
 
 use Bizlogics\Aggregate\User\User;
+use Bizlogics\UseCase\UserOperation\Login\AuthenticatableInterface;
 
 interface UserAggregateRepositoryInterface
 {
@@ -12,4 +13,8 @@ interface UserAggregateRepositoryInterface
     public function save(User $userAggregate): int;
 
     public function isApplying(int $userId): bool;
+
+    public function findById(int $userId): ?User;
+
+    public function checkAuth(string $email, string $password): AuthenticatableInterface;
 }

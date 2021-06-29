@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\AggregateRepository\User;
 
+use App\Infrastructure\AggregateRepository\User\Exception\NotExistException;
+use App\Infrastructure\AggregateRepository\User\Exception\PasswordIsNotMatchException;
 use App\Infrastructure\TableModel\UserAccountBase;
 use Bizlogics\Aggregate\User\User;
 use Bizlogics\Aggregate\UserAggregateRepositoryInterface;
+use Bizlogics\UseCase\UserOperation\Login\AuthenticatableInterface;
 use Illuminate\Support\Facades\Hash;
 use RuntimeException;
 
@@ -57,5 +60,18 @@ class UserAggregateRepository implements UserAggregateRepositoryInterface
             $elqModel->email,
             $elqModel->account_status
         );
+    }
+
+    public function checkAuth(string $email, string $password): AuthenticatableInterface
+    {
+        /** @var UserAccountBase $authenticatable */
+        $authenticatable = UserAccountBase::where('email', $email)->first();
+        if (is_null($authenticatable)) {
+            throw new NotExistException();
+        }
+        if (!Hash::check($password, $authenticatable->password)) {
+            throw new PasswordIsNotMatchException();
+        }
+        return $authenticatable;
     }
 }

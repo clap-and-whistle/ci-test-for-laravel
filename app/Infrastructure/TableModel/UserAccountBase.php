@@ -3,6 +3,7 @@
 namespace App\Infrastructure\TableModel;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Bizlogics\UseCase\UserOperation\Login\AuthenticatableInterface as BizLogicsAuth;
 
 /**
  * @method static self find($id)
@@ -12,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property $email
  * @property $password
  */
-class UserAccountBase extends Authenticatable
+class UserAccountBase extends Authenticatable implements BizLogicsAuth
 {
     protected $table = 'user_account_base';
 
@@ -36,4 +37,8 @@ class UserAccountBase extends Authenticatable
         'password',
     ];
 
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }
