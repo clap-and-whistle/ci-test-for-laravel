@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Infrastructure\AggregateRepository\User\UserAggregateRepository;
-use Bizlogics\Aggregate\UserAggregateRepositoryInterface;
+use App\Infrastructure\Uam\AggregateRepository\User\UserAggregateRepository;
+use Bizlogics\Uam\Aggregate\UserAggregateRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class UserAccountMngProvider extends ServiceProvider

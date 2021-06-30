@@ -68,7 +68,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Infrastructure\TableModel\UserAccountBase::class,
+            'model' => App\Infrastructure\Uam\TableModel\UserAccountBase::class,
         ],
 
         // 'users' => [
