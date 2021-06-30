@@ -25,9 +25,9 @@ Route::namespace('OpenWeb')->group(function () {
 /**
  * ユーザによるアカウント操作系のページ群
  */
-use App\Http\Controllers\UserOperation\CreateAccountController;
-use App\Http\Controllers\UserOperation\LoginController;
-use App\Http\Controllers\UserOperation\LoginCompleteController;
+use App\Http\Controllers\Uam\UserOperation\CreateAccountController;
+use App\Http\Controllers\Uam\UserOperation\LoginController;
+use App\Http\Controllers\Uam\UserOperation\LoginCompleteController;
 
 Route::prefix('uam')->group(function () {
     Route::get('/create-account/new', [CreateAccountController::class, 'newAction']);
