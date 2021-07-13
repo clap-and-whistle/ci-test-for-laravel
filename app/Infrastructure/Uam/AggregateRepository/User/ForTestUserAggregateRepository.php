@@ -39,13 +39,17 @@ final class ForTestUserAggregateRepository implements UserAggregateRepositoryInt
             self::例外用_ユーザID_1_申請中,
             self::例外用_ユーザID_1_申請中メールアドレス,
             self::テスト用Password,
-            AccountStatus::applying()->raw()
+            AccountStatus::applying()->raw(),
+            null,
+            null
         ));
         $this->save(User::buildForTestData(
             self::例外用_ユーザID_2_既に使用中,
             self::例外用_ユーザID_2_既に使用されているメールアドレス,
             self::テスト用Password,
-            AccountStatus::inOperation()->raw()
+            AccountStatus::inOperation()->raw(),
+            null,
+            null
         ));
     }
 
@@ -78,7 +82,9 @@ final class ForTestUserAggregateRepository implements UserAggregateRepositoryInt
                 $id,
                 $userAggregate->email(),
                 $userAggregate->password(),
-                $userAggregate->accountStatus()
+                $userAggregate->accountStatus(),
+                $userAggregate->fullName(),
+                $userAggregate->birthDateStr()
             );
         }
         $this->userDao[$id] = $userAggregate;
