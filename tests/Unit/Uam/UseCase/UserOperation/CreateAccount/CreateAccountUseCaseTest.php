@@ -22,6 +22,13 @@ final class CreateAccountUseCaseTest extends BaseTestCase
         $this->userRepo = ForTestUserAggregateRepository::getInstance();
     }
 
+    private function makeUniqueEmail(): string
+    {
+        $email = $this->userRepo->使われていないメールアドレスを生成する();
+        if ($email === "")  self::markTestIncomplete("このテストは、検証実施前に失敗しています");
+        return $email;
+    }
+
     /**
      * @noinspection NonAsciiCharacters
      * @test
@@ -29,16 +36,10 @@ final class CreateAccountUseCaseTest extends BaseTestCase
     public function アカウント作成の申請をする_基本系列()
     {
         $useCase = new CreateAccountUseCase($this->userRepo);
-        $email = $this->userRepo->使われていないメールアドレスを生成する();
-        if ($email === "") {
-            self::markTestIncomplete("このテストは、検証実施前に失敗しています");
-        }
         $password = ForTestUserAggregateRepository::テスト用Password;
 
-        $result = $useCase->execute($email, $password);
-        if (!$result->isSuccess()) {
-            var_dump([__METHOD__ => ['eMessage' => $result->eMessage()]]);
-        }
+        $result = $useCase->execute($this->makeUniqueEmail(), $password);
+        if (!$result->isSuccess())  var_dump([__METHOD__ => ['eMessage' => $result->eMessage()]]);
 
         self::assertSame(Result::class, get_class($result));
         self::assertTrue($result->isSuccess());
@@ -47,8 +48,8 @@ final class CreateAccountUseCaseTest extends BaseTestCase
     public function provideParamsForExistingUserTest(): array
     {
         return [
-            "申請中" => ["appraying@example.local", ApplyingException::class],
-            "既に使用されている" => ["used@example.local", EmailAlreadyUsedException::class],
+            "申請中" => [ForTestUserAggregateRepository::例外用_ユーザID_1_申請中メールアドレス, ApplyingException::class],
+            "既に使用されている" => [ForTestUserAggregateRepository::例外用_ユーザID_2_既に使用されているメールアドレス, EmailAlreadyUsedException::class],
         ];
     }
     /**
@@ -93,9 +94,8 @@ final class CreateAccountUseCaseTest extends BaseTestCase
     public function アカウント作成の申請をする_入力されたパスワードが要件を満たしていない場合(string $password, string $expected): void
     {
         $useCase = new CreateAccountUseCase($this->userRepo);
-        $email = $this->userRepo->使われていないメールアドレスを生成する();
 
-        $result = $useCase->execute($email, $password);
+        $result = $useCase->execute($this->makeUniqueEmail(), $password);
         self::assertFalse($result->isSuccess());
 
         $exception = $result->exception();

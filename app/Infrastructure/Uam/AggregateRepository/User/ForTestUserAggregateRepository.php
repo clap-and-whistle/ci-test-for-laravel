@@ -20,7 +20,7 @@ final class ForTestUserAggregateRepository implements UserAggregateRepositoryInt
     const テスト用の誤ったPassword = "hogePiyo123";
 
     const 例外用_ユーザID_1_申請中 = 1;
-    const 例外用_ユーザID_1_申請中メールアドレス = "appraying@example.local";
+    const 例外用_ユーザID_1_申請中メールアドレス = "applying@example.local";
 
     const 例外用_ユーザID_2_既に使用中 = 2;
     const 例外用_ユーザID_2_既に使用されているメールアドレス = "used@example.local";
