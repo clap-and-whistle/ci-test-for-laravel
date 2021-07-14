@@ -6,6 +6,7 @@ namespace App\Infrastructure\Uam\AggregateRepository\User;
 use App\Infrastructure\Uam\AggregateRepository\User\Exception\NotExistException;
 use App\Infrastructure\Uam\AggregateRepository\User\Exception\PasswordIsNotMatchException;
 use App\Infrastructure\Uam\TableModel\UserAccountBase;
+use App\Infrastructure\Uam\TableModel\UserAccountProfile;
 use Bizlogics\Uam\Aggregate\User\User;
 use Bizlogics\Uam\Aggregate\UserAggregateRepositoryInterface;
 use Bizlogics\Uam\UseCase\UserOperation\Login\AuthenticatableInterface;
@@ -22,17 +23,26 @@ class UserAggregateRepository implements UserAggregateRepositoryInterface
 
     public function save(User $userAggregate): int
     {
-        $userDao = new UserAccountBase();
-        $userDao->email = $userAggregate->email();
+        // TODO: まだ「アカウント作成」のケースだけのためのロジックなので、「user.id() が空かそうでないか」で分岐必要
+        $userAccountBaseDao = new UserAccountBase();
+        /** @var UserAccountProfile $userAccountProfileDao */
+        $userAccountProfileDao = $userAccountBaseDao->userAccountProfile ?? new UserAccountProfile();
+
+        $userAccountBaseDao->email = $userAggregate->email();
         $password = $userAggregate->password();
         if ($password !== '') {
             // TODO: password カラムを更新するケースの判定メソッドをビジネスロジック側へ持たせるかどうか、検討が必要な気がする
-            $userDao->password = Hash::make($password);
+            $userAccountBaseDao->password = Hash::make($password);
         }
-        $userDao->account_status = $userAggregate->accountStatus();
-        $userDao->save();
+        $userAccountBaseDao->account_status = $userAggregate->accountStatus();
+        $userAccountProfileDao->full_name = $userAggregate->fullName();
+        $userAccountProfileDao->birth_date_str = $userAggregate->birthDateStr();
 
-        return $userDao->id;
+        $userAccountProfileDao->save();
+        $userAccountBaseDao->user_account_profile_id = $userAccountProfileDao->id;
+        $userAccountBaseDao->save();
+
+        return $userAccountBaseDao->id;
     }
 
     public function isApplying(int $userId): bool
