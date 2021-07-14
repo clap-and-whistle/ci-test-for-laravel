@@ -15,10 +15,17 @@ class UserAccountSeeder extends Seeder
      */
     public function run()
     {
+        $profId = DB::table('user_account_profile')->insertGetId([
+            'birth_date_str' => "",
+            'full_name' => "",
+        ]);
         DB::table('user_account_base')->insert([
             'account_status' => 0,
             'email' => 'hoge01@example.local',
             'password' => Hash::make('hoge01TEST'),
+            'user_account_profile_id' => $profId,
         ]);
+
+
     }
 }
