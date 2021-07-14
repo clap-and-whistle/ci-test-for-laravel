@@ -27,7 +27,7 @@ final class CreateAccountUseCase
         $this->userRepos = $userRepos;
     }
 
-    public function execute(string $email, string $password): Result
+    public function execute(string $email, string $password, ?string $fullName = null, ?string $birthDateStr = null): Result
     {
         $result = new Result();
         try {
@@ -37,7 +37,7 @@ final class CreateAccountUseCase
                     ? new ApplyingException()
                     : new EmailAlreadyUsedException();
             }
-            $user = User::buildForCreate($email, $password);
+            $user = User::buildForCreate($email, $password, $fullName, $birthDateStr);
             $this->userRepos->save($user);
         } catch (ApplyingException $e) {
             $result->setFailure($e, self::E_MSG_EMAIL_APPLYING);
