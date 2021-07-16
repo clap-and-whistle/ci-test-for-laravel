@@ -16,9 +16,11 @@ use Illuminate\Support\Facades\Route;
  * 認証不要なページ群
  */
 use App\Http\Controllers\Open\HomeController;
+use App\Http\Controllers\Uam\UserOperation\LoginController;
 
 Route::namespace('OpenWeb')->group(function () {
     Route::get('/', [HomeController::class, 'indexAction'])->name('SiteTop');
+    Route::get('/logout/', [LoginController::class, 'logoutAction']);
     Route::get('/e', [HomeController::class, 'ErrorAction'])->name('FallbackAll');
 });
 
@@ -26,7 +28,6 @@ Route::namespace('OpenWeb')->group(function () {
  * ユーザによるアカウント操作系のページ群
  */
 use App\Http\Controllers\Uam\UserOperation\CreateAccountController;
-use App\Http\Controllers\Uam\UserOperation\LoginController;
 use App\Http\Controllers\Uam\UserOperation\LoginCompleteController;
 
 Route::prefix('uam')->group(function () {
@@ -34,6 +35,7 @@ Route::prefix('uam')->group(function () {
     Route::post('/create-account/', [CreateAccountController::class, 'storeAction']);
     Route::get('/login/input', [LoginController::class, 'inputAction'])->name('login');
     Route::post('/login/', [LoginController::class, 'execAction']);
+
     Route::get('/login-complete/', [LoginCompleteController::class, 'completeAction'])
         ->middleware('auth');
 });

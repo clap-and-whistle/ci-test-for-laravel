@@ -54,6 +54,10 @@ final class LoginController extends BaseController
             Auth::login($authenticatable());
 
             // TODO: 認証済みユーザ向けコンテンツブロックの配置がトップページへ行われたら、リダイレクト先を直す
+            logger(__METHOD__, [
+                'id:' . (Auth::guest() ? 'guest' : Auth::id())
+            ]);
+
             // ログイン完了画面へリダイレクト
             return redirect('/uam/login-complete/');
 
@@ -67,4 +71,12 @@ final class LoginController extends BaseController
         }
     }
 
+    public function logoutAction()
+    {
+        logger(__METHOD__, [
+            'id:' . (Auth::guest() ? 'guest' : Auth::id())
+        ]);
+        Auth::logout();
+        return view('uam.user-operation.login.logout');
+    }
 }
