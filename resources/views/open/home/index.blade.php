@@ -13,18 +13,26 @@
 <div>
     <h1>HomeController:index</h1>
     <hr />
+
     <div>
-        <h2>Internal Links</h2>
-        <hr />
-        <h3>UseCase</h3>
+        <h2>公開されたURL</h2>
+        <h3>ユーザアカウント管理</h3>
         <ul>
             <li><a href="./uam/create-account/new">Sing Up</a></li>
             <li><a href="./uam/login/input">Login</a></li>
         </ul>
-        <h3>for Debug</h3>
+
+    </div>
+
+    <hr />
+
+    <div>
+        <h2>認証保護されたURL</h2>
+        <h3>仮のコンテキスト</h3>
         <ul>
-            <li>nothing</li>
+            <li><a href="/desk/index">Myデスク</a></li>
         </ul>
+
     </div>
 
 </div>

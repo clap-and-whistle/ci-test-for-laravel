@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Bizlogics\Uam\UseCase\UserOperation\CreateAccount;
 
+use Bizlogics\Uam\Aggregate\User\Exception\BirthDateStrInvalidException;
+use Bizlogics\Uam\Aggregate\User\Exception\FullNameSizeTooLongException;
 use Bizlogics\Uam\Aggregate\User\Exception\PasswordSizeTooShortException;
 use Bizlogics\Uam\Aggregate\User\Exception\PasswordTypeCompositionInvalidException;
 use Bizlogics\Uam\Aggregate\User\User;
@@ -18,6 +20,8 @@ final class CreateAccountUseCase
     public const E_MSG_PASSWORD_BASE = "パスワードが要件を満たしていません。";
     public const E_MSG_PASSWORD_SIZE_TOO_SHORT = "[" . User::PASSWORD_MIN_LENGTH . "文字以上必要]";
     public const E_MSG_PASSWORD_TYPE_INVALID = "[半角大小英数字で構成する]";
+    public const E_MSG_FULL_NAME_SIZE_TOO_LONG = "氏名の文字列が長すぎます。";
+    public const E_MSG_BIRTH_DATE_STR_INVALID = "生年月日の文字列が不正です。";
 
     /**
      * CreateAccountUseCase constructor.
@@ -27,7 +31,7 @@ final class CreateAccountUseCase
         $this->userRepos = $userRepos;
     }
 
-    public function execute(string $email, string $password): Result
+    public function execute(string $email, string $password, ?string $fullName = null, ?string $birthDateStr = null): Result
     {
         $result = new Result();
         try {
@@ -37,7 +41,7 @@ final class CreateAccountUseCase
                     ? new ApplyingException()
                     : new EmailAlreadyUsedException();
             }
-            $user = User::buildForCreate($email, $password);
+            $user = User::buildForCreate($email, $password, $fullName, $birthDateStr);
             $this->userRepos->save($user);
         } catch (ApplyingException $e) {
             $result->setFailure($e, self::E_MSG_EMAIL_APPLYING);
@@ -47,6 +51,10 @@ final class CreateAccountUseCase
             $result->setFailure($e, self::E_MSG_PASSWORD_BASE . self::E_MSG_PASSWORD_SIZE_TOO_SHORT);
         } catch (PasswordTypeCompositionInvalidException $e) {
             $result->setFailure($e, self::E_MSG_PASSWORD_BASE . self::E_MSG_PASSWORD_TYPE_INVALID);
+        } catch (FullNameSizeTooLongException $e) {
+            $result->setFailure($e, self::E_MSG_FULL_NAME_SIZE_TOO_LONG);
+        } catch (BirthDateStrInvalidException $e) {
+            $result->setFailure($e, self::E_MSG_BIRTH_DATE_STR_INVALID);
         }
 
         return $result;

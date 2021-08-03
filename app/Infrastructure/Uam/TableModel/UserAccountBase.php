@@ -12,6 +12,7 @@ use Bizlogics\Uam\UseCase\UserOperation\Login\AuthenticatableInterface as BizLog
  * @property $account_status
  * @property $email
  * @property $password
+ * @property $user_account_profile_id
  */
 class UserAccountBase extends Authenticatable implements BizLogicsAuth
 {
@@ -26,6 +27,7 @@ class UserAccountBase extends Authenticatable implements BizLogicsAuth
         'account_status',
         'email',
         'password',
+        'user_account_profile_id',
     ];
 
     /**
@@ -40,5 +42,10 @@ class UserAccountBase extends Authenticatable implements BizLogicsAuth
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function userAccountProfile()
+    {
+        return $this->belongsTo(UserAccountProfile::class, 'user_account_profile_id', 'id');
     }
 }

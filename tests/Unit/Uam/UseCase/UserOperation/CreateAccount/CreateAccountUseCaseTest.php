@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Tests\Unit\Uam\UseCase\UserOperation\CreateAccount;
 
 use App\Infrastructure\Uam\AggregateRepository\User\ForTestUserAggregateRepository;
+use Bizlogics\Uam\Aggregate\User\Exception\BirthDateStrInvalidException;
+use Bizlogics\Uam\Aggregate\User\Exception\FullNameSizeTooLongException;
 use Bizlogics\Uam\Aggregate\User\Exception\PasswordSizeTooShortException;
 use Bizlogics\Uam\Aggregate\User\Exception\PasswordTypeCompositionInvalidException;
 use Bizlogics\Uam\Aggregate\UserAggregateRepositoryInterface;
@@ -40,7 +42,30 @@ final class CreateAccountUseCaseTest extends BaseTestCase
 
         $result = $useCase->execute($this->makeUniqueEmail(), $password);
         if (!$result->isSuccess())  var_dump([__METHOD__ => ['eMessage' => $result->eMessage()]]);
+        self::assertSame(Result::class, get_class($result));
+        self::assertTrue($result->isSuccess());
+    }
 
+    public function provideParamsForBasicStoryTest(): array
+    {
+        return [
+            "nullの場合" => [null, null],
+            "空文字の場合" => ["", ""],
+            "適正値の場合" => ["ほげ田ほげ夫", "19770401"],
+        ];
+    }
+    /**
+     * @noinspection NonAsciiCharacters
+     * @dataProvider provideParamsForBasicStoryTest
+     * @test
+     */
+    public function アカウント作成の申請をする_基本系列_プロフィール入力欄追加分(?string $nameStr, ?string $birthDateStr)
+    {
+        $useCase = new CreateAccountUseCase($this->userRepo);
+        $password = ForTestUserAggregateRepository::テスト用Password;
+
+        $result = $useCase->execute($this->makeUniqueEmail(), $password, $nameStr, $birthDateStr);
+        if (!$result->isSuccess())  var_dump([__METHOD__ => ['eMessage' => $result->eMessage()]]);
         self::assertSame(Result::class, get_class($result));
         self::assertTrue($result->isSuccess());
     }
@@ -102,4 +127,75 @@ final class CreateAccountUseCaseTest extends BaseTestCase
         self::assertSame($expected, $exception ? get_class($exception) : "");
     }
 
+    public function provideParamsForNameInputInvalidTest(): array
+    {
+        return [
+            "氏名の文字列が長すぎる（マルチバイト）" => [
+                "ほげ田ほげ夫ほげ田ほげ夫ほげ田ほげ夫ほげ田ほげ夫ほげ田ほげ夫ほげ田ほげ夫ほげ田ほげ夫ほげ田ほげ夫ほげ田ほげ夫ほげ田ほげ夫ほげ田ほげ夫ほげ田ほげ夫ほげ田ほげ夫ほげ田ほげ夫ほげ田ほげ夫ほげ田ほげ夫ほげ田ほげ夫ほげ田ほげ夫ほげ田ほげ夫ほげ田ほげ夫ほげ田ほげ夫ほげ田ほげ夫",
+                FullNameSizeTooLongException::class
+            ],
+            "氏名の文字列が長すぎる（ASCII文字）" => [
+                "ahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoahoaho",
+                FullNameSizeTooLongException::class
+            ],
+        ];
+    }
+    /**
+     * @noinspection NonAsciiCharacters
+     * @dataProvider provideParamsForNameInputInvalidTest
+     * @test
+     */
+    public function アカウント作成の申請をする_代替系列_氏名の文字列が長すぎる(string $nameStr, string $expected): void
+    {
+        $useCase = new CreateAccountUseCase($this->userRepo);
+        $password = $this->userRepo::テスト用Password;
+
+        $result = $useCase->execute(
+            $this->makeUniqueEmail(),
+            $password,
+            $nameStr,
+            null
+        );
+        self::assertFalse($result->isSuccess());
+        $exception = $result->exception();
+        self::assertSame($expected, $exception ? get_class($exception) : "");
+    }
+
+    public function provideParamsForBirthDateStrInputInvalidTest(): array
+    {
+        return [
+            "生年月日の値が不正_01" => [
+                "99999999",
+                BirthDateStrInvalidException::class
+            ],
+            "生年月日の値が不正_02" => [
+                "ほげほげ",
+                BirthDateStrInvalidException::class
+            ],
+            "生年月日の値が不正_03" => [
+                "19800340",
+                BirthDateStrInvalidException::class
+            ],
+        ];
+    }
+    /**
+     * @noinspection NonAsciiCharacters
+     * @dataProvider provideParamsForBirthDateStrInputInvalidTest
+     * @test
+     */
+    public function アカウント作成の申請をする_代替系列_生年月日の値が不正(string $birthDateStr, string $expected): void
+    {
+        $useCase = new CreateAccountUseCase($this->userRepo);
+        $password = $this->userRepo::テスト用Password;
+
+        $result = $useCase->execute(
+            $this->makeUniqueEmail(),
+            $password,
+            null,
+            $birthDateStr
+        );
+        self::assertFalse($result->isSuccess());
+        $exception = $result->exception();
+        self::assertSame($expected, $exception ? get_class($exception) : "");
+    }
 }

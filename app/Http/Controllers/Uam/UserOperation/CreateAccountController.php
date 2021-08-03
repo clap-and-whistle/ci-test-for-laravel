@@ -36,8 +36,10 @@ final class CreateAccountController extends BaseController
     {
         $email = $request->get('email');
         $password = $request->get('password');
+        $fullName = $request->get('full-name');
+        $birthDate = $request->get('birth-date');
         try {
-            $result = $this->useCase->execute($email, ($password ?? ''));
+            $result = $this->useCase->execute($email, ($password ?? ''), $fullName, $birthDate);
         } catch (RegistrationProcessFailedException $e) {
             logger(__METHOD__, [get_class($e), $e->getMessage()]);
             return redirect('/e');

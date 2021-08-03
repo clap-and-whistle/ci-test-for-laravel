@@ -35,7 +35,7 @@ final class LoginController extends BaseController
 
     public function execAction(Request $request): LaraRedirector|LaraRedirectResponse
     {
-        logger(__METHOD__);
+        logger(__METHOD__, ['id:' . (Auth::guest() ? 'guest' : Auth::id())]);
         $email = $request->get('email');
         $password = $request->get('password');
 
@@ -52,10 +52,7 @@ final class LoginController extends BaseController
              * セッションを開始
              */
             Auth::login($authenticatable());
-
-            // TODO: 認証済みユーザ向けコンテンツブロックの配置がトップページへ行われたら、リダイレクト先を直す
-            // ログイン完了画面へリダイレクト
-            return redirect('/uam/login-complete/');
+            return redirect('/desk/index');
 
         } catch (Throwable $e) {
             logger(__METHOD__, [
@@ -67,4 +64,12 @@ final class LoginController extends BaseController
         }
     }
 
+    public function logoutAction()
+    {
+        logger(__METHOD__, [
+            'id:' . (Auth::guest() ? 'guest' : Auth::id())
+        ]);
+        Auth::logout();
+        return view('uam.user-operation.login.logout');
+    }
 }
