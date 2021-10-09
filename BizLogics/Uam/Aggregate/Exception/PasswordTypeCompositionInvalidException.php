@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Bizlogics\Uam\Aggregate\User\Exception;
+namespace Bizlogics\Uam\Aggregate\Exception;
 
 use RuntimeException;
 

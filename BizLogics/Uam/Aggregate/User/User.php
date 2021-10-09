@@ -5,8 +5,8 @@ namespace Bizlogics\Uam\Aggregate\User;
 
 use Bizlogics\Uam\Aggregate\User\Exception\BirthDateStrInvalidException;
 use Bizlogics\Uam\Aggregate\User\Exception\FullNameSizeTooLongException;
-use Bizlogics\Uam\Aggregate\User\Exception\PasswordSizeTooShortException;
-use Bizlogics\Uam\Aggregate\User\Exception\PasswordTypeCompositionInvalidException;
+use Bizlogics\Uam\Aggregate\Exception\PasswordSizeTooShortException;
+use Bizlogics\Uam\Aggregate\Exception\PasswordTypeCompositionInvalidException;
 
 final class User
 {
@@ -47,6 +47,12 @@ final class User
         return new self($id, $email, '', $accountStatus, $fullName, $birthDateStr);
     }
 
+    /**
+     * @throws PasswordSizeTooShortException
+     * @throws PasswordTypeCompositionInvalidException
+     * @throws FullNameSizeTooLongException
+     * @throws BirthDateStrInvalidException
+     */
     public static function buildForCreate(string $email, string $password, ?string $fullName = null, ?string $birthDateStr = null): self
     {
         $user = new self(0, $email, $password, AccountStatus::applying()->raw(), $fullName, $birthDateStr);

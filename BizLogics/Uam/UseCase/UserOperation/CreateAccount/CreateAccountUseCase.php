@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace Bizlogics\Uam\UseCase\UserOperation\CreateAccount;
 
+use Bizlogics\Uam\Aggregate\Exception\PasswordSizeTooShortException;
+use Bizlogics\Uam\Aggregate\Exception\PasswordTypeCompositionInvalidException;
 use Bizlogics\Uam\Aggregate\Exception\RegistrationProcessFailedException;
 use Bizlogics\Uam\Aggregate\User\Exception\BirthDateStrInvalidException;
 use Bizlogics\Uam\Aggregate\User\Exception\FullNameSizeTooLongException;
-use Bizlogics\Uam\Aggregate\User\Exception\PasswordSizeTooShortException;
-use Bizlogics\Uam\Aggregate\User\Exception\PasswordTypeCompositionInvalidException;
 use Bizlogics\Uam\Aggregate\User\User;
 use Bizlogics\Uam\Aggregate\UserAggregateRepositoryInterface;
 use Bizlogics\Uam\UseCase\UserOperation\CreateAccount\Exception\ApplyingException;
