@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\Unit\Uam\UseCase\UserOperation\Login;
+namespace Tests\Unit\Bizlogics\Uam\UseCase\UserOperation\Login;
 
-use App\Infrastructure\Uam\AggregateRepository\User\Exception\NotExistException;
-use App\Infrastructure\Uam\AggregateRepository\User\Exception\PasswordIsNotMatchException;
-use App\Infrastructure\Uam\AggregateRepository\User\ForTestUserAggregateRepository;
+use Tests\Unit\Infrastructure\Uam\AggregateRepository\User\ForTestUserAggregateRepository;
+use Bizlogics\Uam\Aggregate\Exception\NotExistException;
+use Bizlogics\Uam\Aggregate\Exception\PasswordIsNotMatchException;
 use Bizlogics\Uam\Aggregate\UserAggregateRepositoryInterface;
 use Bizlogics\Uam\UseCase\UserOperation\Login\AuthenticatableInterface;
 use Bizlogics\Uam\UseCase\UserOperation\Login\LoginUseCase;

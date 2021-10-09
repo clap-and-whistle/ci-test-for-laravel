@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Http\Controllers\Uam\UserOperation;
 
-use App\Infrastructure\Uam\AggregateRepository\User\ForTestUserAggregateRepository;
+use Tests\Unit\Infrastructure\Uam\AggregateRepository\User\ForTestUserAggregateRepository;
 use Bizlogics\Uam\Aggregate\UserAggregateRepositoryInterface;
 use Tests\LaraTestCase;
 
