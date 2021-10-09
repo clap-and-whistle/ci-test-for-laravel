@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Uam\AggregateRepository\User;
 
-use App\Infrastructure\Uam\AggregateRepository\User\Exception\NotExistException;
-use App\Infrastructure\Uam\AggregateRepository\User\Exception\PasswordIsNotMatchException;
 use App\Infrastructure\Uam\TableModel\UserAccountBase;
 use App\Infrastructure\Uam\TableModel\UserAccountProfile;
+use Bizlogics\Uam\Aggregate\Exception\NotExistException;
+use Bizlogics\Uam\Aggregate\Exception\PasswordIsNotMatchException;
 use Bizlogics\Uam\Aggregate\Exception\RegistrationProcessFailedException;
 use Bizlogics\Uam\Aggregate\User\User;
 use Bizlogics\Uam\Aggregate\UserAggregateRepositoryInterface;
