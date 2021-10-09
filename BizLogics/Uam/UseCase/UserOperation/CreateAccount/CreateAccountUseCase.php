@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Bizlogics\Uam\UseCase\UserOperation\CreateAccount;
 
+use Bizlogics\Uam\Aggregate\Exception\RegistrationProcessFailedException;
 use Bizlogics\Uam\Aggregate\User\Exception\BirthDateStrInvalidException;
 use Bizlogics\Uam\Aggregate\User\Exception\FullNameSizeTooLongException;
 use Bizlogics\Uam\Aggregate\User\Exception\PasswordSizeTooShortException;
@@ -31,6 +32,7 @@ final class CreateAccountUseCase
         $this->userRepos = $userRepos;
     }
 
+    /** @throws RegistrationProcessFailedException */
     public function execute(string $email, string $password, ?string $fullName = null, ?string $birthDateStr = null): Result
     {
         $result = new Result();

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Uam\UserOperation;
 
-use App\Infrastructure\Uam\AggregateRepository\Exception\RegistrationProcessFailedException;
+use Bizlogics\Uam\Aggregate\Exception\RegistrationProcessFailedException;
 use Bizlogics\Uam\UseCase\UserOperation\CreateAccount\CreateAccountUseCase;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
