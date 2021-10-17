@@ -16,6 +16,8 @@ use Throwable;
 
 final class LoginController extends BaseController
 {
+    public const URL_ROUTE_NAME_INPUT_ACTION = "login";
+
     private LoginUseCase $useCase;
 
     /**
