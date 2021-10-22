@@ -9,12 +9,25 @@ use Tests\LaraTestCase;
 
 final class CreateAccountControllerTest extends LaraTestCase
 {
+    private const INPUT_URL = '/uam/create-account/new';
+    private const POST_URL = '/uam/create-account';
+
     private UserAggregateRepositoryInterface|ForTestUserAggregateRepository $userRepo;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->userRepo = ForTestUserAggregateRepository::getInstance();
+
+        /*
+         * DIするインスタンスを「DAOを持たないテスト用Repository実装」に差し替える。
+         * （Featureテストのような use CreatesApplication しているテストクラスの場合は
+         *  これをしてあげるか本番と別のDB(sqlite等)を使うように設定するかしないとDBが飛ぶ恐れあり）
+         */
+        $this->instance(
+            UserAggregateRepositoryInterface::class,
+            $this->userRepo
+        );
     }
 
     /**
@@ -23,7 +36,7 @@ final class CreateAccountControllerTest extends LaraTestCase
      */
     public function アカウント作成の申請をする_「アカウント作成」画面(): void
     {
-        $response = $this->get('/uam/create-account/new');
+        $response = $this->get(self::INPUT_URL);
         $response->assertStatus(200);
     }
 
@@ -31,7 +44,32 @@ final class CreateAccountControllerTest extends LaraTestCase
      * @noinspection NonAsciiCharacters
      * @test
      */
-    public function アカウント作成の申請をする_一般ユーザを「申請中」として記録する(): void
+    public function 基本コース1_POST結果をテスト_emailとpasswordのみ(): void
+    {
+        $data = [
+            'email' => $this->userRepo->使われていないメールアドレスを生成する(),
+            'password' => ForTestUserAggregateRepository::テスト用Password,
+        ];
+
+        $response = $this->post(self::POST_URL, $data);
+        $response->assertRedirect('/');
+
+        $data = [
+            'email' => ForTestUserAggregateRepository::例外用_ユーザID_2_既に使用されているメールアドレス,
+            'password' => ForTestUserAggregateRepository::テスト用Password,
+        ];
+        $response = $this
+            ->from(self::INPUT_URL)
+            ->post(self::POST_URL, $data);
+        $response->assertRedirect(self::INPUT_URL);
+
+    }
+
+    /**
+     * @noinspection NonAsciiCharacters
+     * @test
+     */
+    public function 基本コース2_POST結果をテスト_フルオプション(): void
     {
         $data = [
             'email' => $this->userRepo->使われていないメールアドレスを生成する(),
@@ -40,28 +78,20 @@ final class CreateAccountControllerTest extends LaraTestCase
             'birth-date' => '19800101'
         ];
 
-        $this->instance(
-            /*
-             * DIするインスタンスを「DAOを持たないテスト用Repository実装」に差し替える。
-             * （Featureテストのような use CreatesApplication しているテストクラスの場合はこれをしてあげないとDBが飛ぶ恐れあり）
-             */
-            UserAggregateRepositoryInterface::class,
-            ForTestUserAggregateRepository::getInstance()
-        );
-
-        $response = $this->post('/uam/create-account', $data);
+        $response = $this->post(self::POST_URL, $data);
         $response->assertRedirect('/');
 
         $data = [
             'email' => $this->userRepo->使われていないメールアドレスを生成する(),
             'password' => ForTestUserAggregateRepository::テスト用Password,
             'full-name' => 'ほげTEST',
-            'birth-date' => '19800140'
+            'birth-date' => '19800140'  // 不正な入力値
         ];
-        $response = $this->post('/uam/create-account', $data);
-        $response->assertSessionHasErrors();
+        $response = $this
+            ->from(self::INPUT_URL)
+            ->post(self::POST_URL, $data);
+        $response->assertRedirect(self::INPUT_URL);
 
     }
-
 
 }
