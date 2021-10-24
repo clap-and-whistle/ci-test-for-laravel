@@ -29,13 +29,6 @@ final class LoginUseCase
         $result = new Result();
         try {
             $authenticatable = $this->userRepos->checkAuth($email, $password);
-
-            // User集約インスタンスを構築できる状態であることを確認することもこのユースケースの責務の一つなので、
-            // 下記の正常終了だけ確認する
-            if (!$this->userRepos->findById($authenticatable->getId())) {
-                throw new RuntimeException('集約インスタンスの構築に失敗しました');
-            }
-
             $result->setAuthObj($authenticatable);
         } catch (NotExistException $e) {
             $result->setFailure($e, self::E_MSG_NOT_EXISTS);
