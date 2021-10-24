@@ -11,6 +11,7 @@ use Bizlogics\Uam\Aggregate\Exception\RegistrationProcessFailedException;
 use Bizlogics\Uam\Aggregate\User\User;
 use Bizlogics\Uam\Aggregate\UserAggregateRepositoryInterface;
 use Bizlogics\Uam\UseCase\UserOperation\Login\AuthenticatableInterface;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use RuntimeException;
 use Throwable;
@@ -39,12 +40,15 @@ class UserAggregateRepository implements UserAggregateRepositoryInterface
         $userAccountProfileDao->full_name = $userAggregate->fullName();
         $userAccountProfileDao->birth_date_str = $userAggregate->birthDateStr();
 
+        DB::beginTransaction();
         try {
             $userAccountBaseDao->save();
             $userId = $userAccountBaseDao->id;
             $userAccountProfileDao->user_account_base_id = $userId;
             $userAccountProfileDao->save();
+            DB::commit();
         } catch (Throwable $e) {
+            DB::rollBack();
             throw new RegistrationProcessFailedException($e->getMessage());
         }
 
