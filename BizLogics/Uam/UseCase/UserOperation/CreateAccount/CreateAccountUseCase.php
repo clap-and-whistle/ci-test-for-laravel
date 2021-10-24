@@ -3,14 +3,17 @@ declare(strict_types=1);
 
 namespace Bizlogics\Uam\UseCase\UserOperation\CreateAccount;
 
+use Bizlogics\Uam\Aggregate\Exception\PasswordSizeTooShortException;
+use Bizlogics\Uam\Aggregate\Exception\PasswordTypeCompositionInvalidException;
+use Bizlogics\Uam\Aggregate\Exception\RegistrationProcessFailedException;
 use Bizlogics\Uam\Aggregate\User\Exception\BirthDateStrInvalidException;
 use Bizlogics\Uam\Aggregate\User\Exception\FullNameSizeTooLongException;
-use Bizlogics\Uam\Aggregate\User\Exception\PasswordSizeTooShortException;
-use Bizlogics\Uam\Aggregate\User\Exception\PasswordTypeCompositionInvalidException;
 use Bizlogics\Uam\Aggregate\User\User;
 use Bizlogics\Uam\Aggregate\UserAggregateRepositoryInterface;
 use Bizlogics\Uam\UseCase\UserOperation\CreateAccount\Exception\ApplyingException;
 use Bizlogics\Uam\UseCase\UserOperation\CreateAccount\Exception\EmailAlreadyUsedException;
+
+use RuntimeException;
 
 final class CreateAccountUseCase
 {
@@ -31,6 +34,7 @@ final class CreateAccountUseCase
         $this->userRepos = $userRepos;
     }
 
+    /** @throws RegistrationProcessFailedException */
     public function execute(string $email, string $password, ?string $fullName = null, ?string $birthDateStr = null): Result
     {
         $result = new Result();
@@ -42,7 +46,12 @@ final class CreateAccountUseCase
                     : new EmailAlreadyUsedException();
             }
             $user = User::buildForCreate($email, $password, $fullName, $birthDateStr);
-            $this->userRepos->save($user);
+            $userId = $this->userRepos->save($user);
+
+            // User集約インスタンスを構築できる状態であることを確認する
+            if ($this->userRepos->findById($userId) === null) {
+                throw new RuntimeException('集約インスタンスの構築に失敗しました');
+            }
         } catch (ApplyingException $e) {
             $result->setFailure($e, self::E_MSG_EMAIL_APPLYING);
         } catch (EmailAlreadyUsedException $e) {

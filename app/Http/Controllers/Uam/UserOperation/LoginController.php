@@ -16,6 +16,8 @@ use Throwable;
 
 final class LoginController extends BaseController
 {
+    public const URL_ROUTE_NAME_INPUT_ACTION = "login";
+
     private LoginUseCase $useCase;
 
     /**
@@ -43,6 +45,7 @@ final class LoginController extends BaseController
             /** @var Result $result */
             $result = $this->useCase->execute($email, $password);
             if (!$result->isSuccess()) {
+                logger(__METHOD__, [$result->eMessage()]);
                 return back()->withErrors($result->eMessage());
             }
             // UserAccountBaseインスタンスをキャストするためのアロー関数でクロージャを生成

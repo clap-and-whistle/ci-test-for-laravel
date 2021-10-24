@@ -45,12 +45,18 @@ final class AccountStatus
     {
         return new self(self::APPLYING);
     }
-
-    public static function inOperation()
+    public static function inOperation(): self
     {
         return new self(self::IN_OPERATION);
     }
-
+    public static function stopping(): self
+    {
+        return new self(self::STOPPING);
+    }
+    public static function deleted(): self
+    {
+        return new self(self::DELETED);
+    }
     public function isApplying()
     {
         return $this->rawValue === self::APPLYING;

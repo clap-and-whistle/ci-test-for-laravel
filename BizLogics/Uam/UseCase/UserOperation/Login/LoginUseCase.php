@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Bizlogics\Uam\UseCase\UserOperation\Login;
 
-use App\Infrastructure\Uam\AggregateRepository\User\Exception\NotExistException;
-use App\Infrastructure\Uam\AggregateRepository\User\Exception\PasswordIsNotMatchException;
+use Bizlogics\Uam\Aggregate\Exception\NotExistException;
+use Bizlogics\Uam\Aggregate\Exception\PasswordIsNotMatchException;
 use Bizlogics\Uam\Aggregate\UserAggregateRepositoryInterface;
 use RuntimeException;
 
@@ -12,8 +12,8 @@ final class LoginUseCase
 {
     private UserAggregateRepositoryInterface $userRepos;
 
-    const E_MSG_NOT_EXISTS = "入力されたメールアドレスを使用するユーザはいません";
-    const E_MSG_PASSWORD_IS_NOT_MATCH = "パスワードが一致しません";
+    public const E_MSG_NOT_EXISTS = "入力されたメールアドレスを使用するユーザはいません";
+    public const E_MSG_PASSWORD_IS_NOT_MATCH = "パスワードが一致しません";
 
     /**
      * LoginUseCase constructor.
@@ -24,18 +24,11 @@ final class LoginUseCase
         $this->userRepos = $userRepos;
     }
 
-    public function execute(string $email, string $password)
+    public function execute(string $email, string $password): Result
     {
         $result = new Result();
         try {
             $authenticatable = $this->userRepos->checkAuth($email, $password);
-
-            // User集約インスタンスを構築できる状態であることを確認することもこのユースケースの責務の一つなので、
-            // 下記の正常終了だけ確認する
-            if (!$this->userRepos->findById($authenticatable->getId())) {
-                throw new RuntimeException('集約インスタンスの構築に失敗しました');
-            }
-
             $result->setAuthObj($authenticatable);
         } catch (NotExistException $e) {
             $result->setFailure($e, self::E_MSG_NOT_EXISTS);

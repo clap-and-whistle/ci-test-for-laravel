@@ -18,6 +18,8 @@ use Bizlogics\Uam\UseCase\UserOperation\Login\AuthenticatableInterface as BizLog
  */
 class UserAccountBase extends Authenticatable implements BizLogicsAuth
 {
+    use HasFactory;
+
     protected $table = 'user_account_base';
 
     /**

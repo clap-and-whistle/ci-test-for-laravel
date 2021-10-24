@@ -18,9 +18,10 @@
             <li><a href="/logout">ログアウト</a></li>
         </ul>
         <h2>for Debug</h2>
-        <ul>
-            <li>Nothing...</li>
-        </ul>
+        <dl>
+            <dt>email:</dt>
+            <dd>{{ $email }}</dd>
+        </dl>
 
     </div>
 
