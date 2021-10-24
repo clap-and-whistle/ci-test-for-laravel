@@ -25,7 +25,6 @@ class UserAggregateRepository implements UserAggregateRepositoryInterface
     {
         // TODO: まだ「アカウント作成」のケースだけのためのロジックなので、「user.id() が空かそうでないか」で分岐必要
         $userAccountBaseDao = new UserAccountBase();
-        /** @var UserAccountProfile $userAccountProfileDao */
         $userAccountProfileDao = $userAccountBaseDao->userAccountProfile ?? new UserAccountProfile();
 
         $userAccountBaseDao->email = $userAggregate->email();
@@ -38,11 +37,16 @@ class UserAggregateRepository implements UserAggregateRepositoryInterface
         $userAccountProfileDao->full_name = $userAggregate->fullName();
         $userAccountProfileDao->birth_date_str = $userAggregate->birthDateStr();
 
-        $userAccountProfileDao->save();
-        $userAccountBaseDao->user_account_profile_id = $userAccountProfileDao->id;
-        $userAccountBaseDao->save();
+        try {
+            $userAccountBaseDao->save();
+            $userId = $userAccountBaseDao->id;
+            $userAccountProfileDao->user_account_base_id = $userId;
+            $userAccountProfileDao->save();
+        } catch (Throwable $e) {
+            throw new RegistrationProcessFailedException($e->getMessage());
+        }
 
-        return $userAccountBaseDao->id;
+        return $userId;
     }
 
     public function isApplying(int $userId): bool
@@ -56,19 +60,22 @@ class UserAggregateRepository implements UserAggregateRepositoryInterface
 
     public function findById(int $userId): ?User
     {
-        $elqModel = UserAccountBase::find($userId);
-        if (is_null($elqModel)) {
+        $elqUserAccountBase = UserAccountBase::find($userId);
+        if (is_null($elqUserAccountBase)) {
             return null;
         }
 
-        if (! ($elqModel->id ?? 0) ) {
+        if (! ($elqUserAccountBase->id ?? 0) ) {
             throw new RuntimeException('データに不正があります: id');
         }
 
+        $elqUserAccountProfile = $elqUserAccountBase->userAccountProfile;
         return User::buildForFind(
-            $elqModel->id,
-            $elqModel->email,
-            $elqModel->account_status
+            $elqUserAccountBase->id,
+            $elqUserAccountBase->email,
+            $elqUserAccountBase->account_status,
+            $elqUserAccountProfile->full_name,
+            $elqUserAccountProfile->birth_date_str
         );
     }
 

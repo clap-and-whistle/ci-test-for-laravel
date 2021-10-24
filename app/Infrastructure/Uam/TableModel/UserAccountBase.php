@@ -2,17 +2,19 @@
 
 namespace App\Infrastructure\Uam\TableModel;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Bizlogics\Uam\UseCase\UserOperation\Login\AuthenticatableInterface as BizLogicsAuth;
 
 /**
- * @method static self find($id)
+ * @method static self|null find($id)
  * @method static \Illuminate\Database\Eloquent\Builder where($string, $string)
  * @property $id
  * @property $account_status
  * @property $email
  * @property $password
- * @property $user_account_profile_id
+ * @property UserAccountProfile $userAccountProfile
  */
 class UserAccountBase extends Authenticatable implements BizLogicsAuth
 {
@@ -27,7 +29,6 @@ class UserAccountBase extends Authenticatable implements BizLogicsAuth
         'account_status',
         'email',
         'password',
-        'user_account_profile_id',
     ];
 
     /**
@@ -44,8 +45,8 @@ class UserAccountBase extends Authenticatable implements BizLogicsAuth
         return $this->id;
     }
 
-    public function userAccountProfile()
+    public function userAccountProfile(): HasOne
     {
-        return $this->belongsTo(UserAccountProfile::class, 'user_account_profile_id', 'id');
+        return $this->hasOne(UserAccountProfile::class);
     }
 }

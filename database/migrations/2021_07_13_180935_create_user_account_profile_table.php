@@ -15,13 +15,11 @@ class CreateUserAccountProfileTable extends Migration
     {
         Schema::create('user_account_profile', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_account_base_id')->nullable(false);
+            $table->foreign('user_account_base_id')->references('id')->on('user_account_base');
             $table->string('birth_date_str');
             $table->string('full_name');
             $table->timestamps();
-        });
-
-        Schema::table('user_account_base', function (Blueprint $table) {
-            $table->bigInteger('user_account_profile_id')->after('password');
         });
     }
 
@@ -33,8 +31,5 @@ class CreateUserAccountProfileTable extends Migration
     public function down()
     {
         Schema::dropIfExists('user_account_profile');
-        Schema::table('user_account_base', function (Blueprint $table) {
-            $table->dropColumn('user_account_profile_id');
-        });
     }
 }
