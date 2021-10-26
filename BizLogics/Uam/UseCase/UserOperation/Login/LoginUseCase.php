@@ -6,7 +6,6 @@ namespace Bizlogics\Uam\UseCase\UserOperation\Login;
 use Bizlogics\Uam\Aggregate\Exception\NotExistException;
 use Bizlogics\Uam\Aggregate\Exception\PasswordIsNotMatchException;
 use Bizlogics\Uam\Aggregate\UserAggregateRepositoryInterface;
-use RuntimeException;
 
 final class LoginUseCase
 {

@@ -10,7 +10,7 @@ use Bizlogics\Uam\Aggregate\Exception\PasswordIsNotMatchException;
 use Bizlogics\Uam\Aggregate\Exception\RegistrationProcessFailedException;
 use Bizlogics\Uam\Aggregate\User\User;
 use Bizlogics\Uam\Aggregate\UserAggregateRepositoryInterface;
-use Bizlogics\Uam\UseCase\UserOperation\Login\AuthenticatableInterface;
+use Bizlogics\Uam\UseCase\AuthenticatableInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use RuntimeException;

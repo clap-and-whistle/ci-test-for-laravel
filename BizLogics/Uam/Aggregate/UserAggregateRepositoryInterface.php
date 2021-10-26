@@ -7,7 +7,7 @@ use Bizlogics\Uam\Aggregate\Exception\NotExistException;
 use Bizlogics\Uam\Aggregate\Exception\PasswordIsNotMatchException;
 use Bizlogics\Uam\Aggregate\Exception\RegistrationProcessFailedException;
 use Bizlogics\Uam\Aggregate\User\User;
-use Bizlogics\Uam\UseCase\UserOperation\Login\AuthenticatableInterface;
+use Bizlogics\Uam\UseCase\AuthenticatableInterface;
 
 interface UserAggregateRepositoryInterface
 {
