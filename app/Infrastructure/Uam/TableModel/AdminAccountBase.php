@@ -4,7 +4,7 @@ namespace App\Infrastructure\Uam\TableModel;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Bizlogics\Uam\UseCase\UserOperation\Login\AuthenticatableInterface as BizLogicsAuth;
+use Bizlogics\Uam\UseCase\AuthenticatableInterface as BizLogicsAuth;
 
 /**
  * @method static self|null find($id)

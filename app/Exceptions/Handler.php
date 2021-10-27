@@ -2,6 +2,9 @@
 
 namespace App\Exceptions;
 
+use App\Http\Controllers\Uam\SysAdminOperation\LoginController as AdminLoginController;
+use App\Http\Controllers\Uam\UserOperation\LoginController;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -38,4 +41,21 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        if($request->expectsJson()) {
+            return response()->json(['message' => $exception->getMessage()], 401);
+        }
+
+        logger(__METHOD__, $exception->guards());
+        if (in_array('admin', $exception->guards())) {
+            return redirect()
+                ->guest(route(AdminLoginController::URL_ROUTE_NAME_INPUT_ACTION));
+        }
+
+        return redirect()
+            ->guest($exception->redirectTo() ?? route(LoginController::URL_ROUTE_NAME_INPUT_ACTION));
+    }
+
 }
