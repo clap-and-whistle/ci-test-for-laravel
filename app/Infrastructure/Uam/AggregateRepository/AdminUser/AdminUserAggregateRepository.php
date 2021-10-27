@@ -12,7 +12,7 @@ use Bizlogics\Uam\UseCase\AuthenticatableInterface;
 class AdminUserAggregateRepository implements AdminUserAggregateRepositoryInterface
 {
 
-    public function findById(): AdminUser
+    public function findById(int $id): ?AdminUser
     {
         // TODO: Implement findById() method.
         return new AdminUser();

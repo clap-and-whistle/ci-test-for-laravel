@@ -53,14 +53,17 @@ class LoginUseCaseTest extends BaseTestCase
             ForTestAdminUserAggregateRepository::システム管理コンソールログイン時例外用_使用されていないメールアドレス,
             ForTestAdminUserAggregateRepository::テスト用Password
         );
+        $exception = $result->exception();
 
         // 1. $result->isSuccess() が false であること
         self::assertFalse($result->isSuccess());
+
         // 2. $result->eMessage() が 期待された通りの文字列であること
         self::assertSame(LoginUseCase::E_MSG_NOT_EXISTS, $result->eMessage());
+
         // 3. $result->exception() が nullでないこと
-        $exception = $result->exception();
         self::assertNotNull($exception);
+
         // 4. $result->exception() が NotExistException を返すこと
         self::assertSame(NotExistException::class, $exception ? get_class($exception) : "");
     }
@@ -76,14 +79,17 @@ class LoginUseCaseTest extends BaseTestCase
             ForTestAdminUserAggregateRepository::テスト用_管理者ID_1_Enabledメールアドレス,
             ForTestAdminUserAggregateRepository::テスト用の誤ったPassword
         );
+        $exception = $result->exception();
 
         // 1. result->isSuccess() が false であること
         self::assertFalse($result->isSuccess());
+
         // 2. $result->eMessage() が 期待された通りの文字列であること
         self::assertSame(LoginUseCase::E_MSG_PASSWORD_IS_NOT_MATCH, $result->eMessage());
+
         // 3. $result->exception() が nullでないこと
-        $exception = $result->exception();
         self::assertNotNull($exception);
+
         // 4. result->exception() が PasswordIsNotMatchException を返すこと
         self::assertSame(PasswordIsNotMatchException::class, $exception ? get_class($exception) : "");
     }

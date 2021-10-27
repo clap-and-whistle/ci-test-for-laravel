@@ -3,13 +3,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Uam\AggregateRepository\AdminUser;
 
+use Bizlogics\Uam\Aggregate\AdminUser\AccountStatus;
 use Bizlogics\Uam\Aggregate\AdminUser\AdminUser;
 use Bizlogics\Uam\Aggregate\AdminUserAggregateRepositoryInterface;
 use Bizlogics\Uam\Aggregate\Exception\NotExistException;
 use Bizlogics\Uam\Aggregate\Exception\PasswordIsNotMatchException;
 use Bizlogics\Uam\UseCase\AuthenticatableInterface;
 
-class ForTestAdminUserAggregateRepository implements AdminUserAggregateRepositoryInterface
+final class ForTestAdminUserAggregateRepository implements AdminUserAggregateRepositoryInterface
 {
     /** @var AdminUser[]  */
     private array $adminDao = [];
@@ -29,7 +30,16 @@ class ForTestAdminUserAggregateRepository implements AdminUserAggregateRepositor
      * ForTestAdminAggregateRepository constructor.
      */
     private function __construct()
-    {}
+    {
+        $this->save(AdminUser::buildForTestData(
+            self::テスト用_管理者ID_1_Enabled,
+            self::テスト用_管理者ID_1_Enabledメールアドレス,
+            self::テスト用Password,
+            AccountStatus::enabled()->raw(),
+            null,
+            null
+        ));
+    }
 
     public static function getInstance(): self
     {
@@ -39,10 +49,37 @@ class ForTestAdminUserAggregateRepository implements AdminUserAggregateRepositor
         return self::$singleton;
     }
 
-    public function findById(): AdminUser
+    public function getAdminIdByEmail(string $email): int
     {
-        // TODO: Implement findById() method.
-        return new AdminUser();
+        foreach ($this->adminDao as $id => $adminAggregate) {
+            if ($adminAggregate->email() === $email) {
+                return $id;
+            }
+        }
+        return 0;
+    }
+
+    public function findById(int $id): ?AdminUser
+    {
+        return $this->adminDao[$id] ?? null;
+    }
+
+    public function save(AdminUser $adminAggregate): int
+    {
+        $id = $adminAggregate->id();
+        if ($id === 0) {
+            $keys = array_keys($this->adminDao);
+            sort($keys);
+            $id = end($keys) + 1;
+            $adminAggregate = AdminUser::buildForTestData(
+                $id,
+                $adminAggregate->email(),
+                $adminAggregate->password(),
+                $adminAggregate->accountStatus()
+            );
+        }
+        $this->adminDao[$id] = $adminAggregate;
+        return $id;
     }
 
     /**
@@ -50,13 +87,20 @@ class ForTestAdminUserAggregateRepository implements AdminUserAggregateRepositor
      */
     public function checkAuth(string $email, string $password): AuthenticatableInterface
     {
-        // TODO: Implement checkAuth() method.
-        return new class implements AuthenticatableInterface {
-
-            public function getId(): int
+        $id = $this->getAdminIdByEmail($email);
+        if (!array_key_exists($id, $this->adminDao)) {
+            throw new NotExistException();
+        }
+        $adminAggregate = $this->adminDao[$id];
+        if ($password !== $adminAggregate->password()) {
+            throw new PasswordIsNotMatchException();
+        }
+        return new class($adminAggregate)
+            implements AuthenticatableInterface
             {
-                return 0;
-            }
-        };
+                private AdminUser $adminAggregate;
+                public function __construct(AdminUser $adminAggregate){ $this->adminAggregate = $adminAggregate; }
+                public function getId(): int { return $this->adminAggregate->id(); }
+            };
     }
 }

@@ -10,7 +10,7 @@ use Bizlogics\Uam\UseCase\AuthenticatableInterface;
 
 interface AdminUserAggregateRepositoryInterface
 {
-    public function findById(): AdminUser;
+    public function findById(int $id): ?AdminUser;
 
     /**
      * @throws NotExistException
