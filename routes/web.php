@@ -32,13 +32,16 @@ use App\Http\Controllers\Uam\UserOperation\CreateAccountController;
 Route::prefix('uam')->group(function () {
     Route::get('/create-account/new', [CreateAccountController::class, 'newAction']);
     Route::post('/create-account/', [CreateAccountController::class, 'storeAction']);
-    Route::get('/login/input', [LoginController::class, 'inputAction'])->name('login');
+    Route::get('/login/input', [LoginController::class, 'inputAction'])
+        ->name(LoginController::URL_ROUTE_NAME_INPUT_ACTION);
     Route::post('/login/', [LoginController::class, 'execAction']);
 });
 
 use App\Http\Controllers\Desk\MyWorkController;
 
-Route::prefix('desk')->name('desk.')->group(function () {
-        Route::get('/index', [MyWorkController::class, 'indexAction'])
+Route::prefix('desk')
+    ->name(MyWorkController::URL_ROUTE_NAME)
+    ->group(function () {
+        Route::get('index', [MyWorkController::class, 'indexAction'])
             ->middleware('auth');
 });

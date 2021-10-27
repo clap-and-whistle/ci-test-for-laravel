@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\Unit\Uam\UseCase\UserOperation\CreateAccount;
+namespace Tests\Unit\Bizlogics\Uam\UseCase\UserOperation\CreateAccount;
 
-use App\Infrastructure\Uam\AggregateRepository\User\ForTestUserAggregateRepository;
+use Tests\Unit\Infrastructure\Uam\AggregateRepository\User\ForTestUserAggregateRepository;
+use Bizlogics\Uam\Aggregate\Exception\PasswordSizeTooShortException;
+use Bizlogics\Uam\Aggregate\Exception\PasswordTypeCompositionInvalidException;
 use Bizlogics\Uam\Aggregate\User\Exception\BirthDateStrInvalidException;
 use Bizlogics\Uam\Aggregate\User\Exception\FullNameSizeTooLongException;
-use Bizlogics\Uam\Aggregate\User\Exception\PasswordSizeTooShortException;
-use Bizlogics\Uam\Aggregate\User\Exception\PasswordTypeCompositionInvalidException;
 use Bizlogics\Uam\Aggregate\UserAggregateRepositoryInterface;
 use Bizlogics\Uam\UseCase\UserOperation\CreateAccount\CreateAccountUseCase;
 use Bizlogics\Uam\UseCase\UserOperation\CreateAccount\Exception\ApplyingException;
