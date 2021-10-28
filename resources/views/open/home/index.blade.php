@@ -16,6 +16,10 @@
 
     <div>
         <h2>公開されたURL</h2>
+        <h3>システム管理</h3>
+        <ul>
+            <li><a href="./uam/login/admin/input">管理者Login</a></li>
+        </ul>
         <h3>ユーザアカウント管理</h3>
         <ul>
             <li><a href="./uam/create-account/new">Sing Up</a></li>
@@ -28,9 +32,13 @@
 
     <div>
         <h2>認証保護されたURL</h2>
-        <h3>仮のコンテキスト</h3>
+        <h3>システム管理用</h3>
         <ul>
-            <li><a href="/desk/index">Myデスク</a></li>
+            <li><a href="./admin/index">管理コンソール</a></li>
+        </ul>
+        <h3>ユーザ用</h3>
+        <ul>
+            <li><a href="./desk/index">Myデスク</a></li>
         </ul>
 
     </div>

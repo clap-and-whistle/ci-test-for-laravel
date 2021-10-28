@@ -16,6 +16,8 @@ use Throwable;
 
 final class LoginController extends BaseController
 {
+    public const URL_ROUTE_NAME_INPUT_ACTION = "login";
+
     private LoginUseCase $useCase;
 
     /**
@@ -35,7 +37,8 @@ final class LoginController extends BaseController
 
     public function execAction(Request $request): LaraRedirector|LaraRedirectResponse
     {
-        logger(__METHOD__, ['id:' . (Auth::guest() ? 'guest' : Auth::id())]);
+        $guard = Auth::guard('user');
+        logger(__METHOD__, ['id:' . ($guard->guest() ? 'guest' : $guard->id())]);
         $email = $request->get('email');
         $password = $request->get('password');
 
@@ -43,6 +46,7 @@ final class LoginController extends BaseController
             /** @var Result $result */
             $result = $this->useCase->execute($email, $password);
             if (!$result->isSuccess()) {
+                logger(__METHOD__, [$result->eMessage()]);
                 return back()->withErrors($result->eMessage());
             }
             // UserAccountBaseインスタンスをキャストするためのアロー関数でクロージャを生成
@@ -51,7 +55,7 @@ final class LoginController extends BaseController
             /*
              * セッションを開始
              */
-            Auth::login($authenticatable());
+            $guard->login($authenticatable());
             return redirect('/desk/index');
 
         } catch (Throwable $e) {
@@ -66,10 +70,11 @@ final class LoginController extends BaseController
 
     public function logoutAction()
     {
+        $guard = Auth::guard('user');
         logger(__METHOD__, [
-            'id:' . (Auth::guest() ? 'guest' : Auth::id())
+            'id:' . ($guard->guest() ? 'guest' : $guard->id())
         ]);
-        Auth::logout();
+        $guard->logout();
         return view('uam.user-operation.login.logout');
     }
 }

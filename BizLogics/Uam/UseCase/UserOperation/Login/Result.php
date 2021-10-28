@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Bizlogics\Uam\UseCase\UserOperation\Login;
 
+use Bizlogics\Uam\UseCase\AuthenticatableInterface;
 use RuntimeException;
 
 final class Result
