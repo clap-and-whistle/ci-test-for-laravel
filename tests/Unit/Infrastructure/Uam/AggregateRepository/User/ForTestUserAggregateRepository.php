@@ -8,7 +8,7 @@ use Bizlogics\Uam\Aggregate\Exception\PasswordIsNotMatchException;
 use Bizlogics\Uam\Aggregate\User\User;
 use Bizlogics\Uam\Aggregate\User\AccountStatus;
 use Bizlogics\Uam\Aggregate\UserAggregateRepositoryInterface;
-use Bizlogics\Uam\UseCase\UserOperation\Login\AuthenticatableInterface;
+use Bizlogics\Uam\UseCase\AuthenticatableInterface;
 use Exception;
 
 final class ForTestUserAggregateRepository implements UserAggregateRepositoryInterface

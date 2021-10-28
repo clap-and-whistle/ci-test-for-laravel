@@ -7,8 +7,8 @@ use Tests\Unit\Infrastructure\Uam\AggregateRepository\User\ForTestUserAggregateR
 use Bizlogics\Uam\Aggregate\Exception\NotExistException;
 use Bizlogics\Uam\Aggregate\Exception\PasswordIsNotMatchException;
 use Bizlogics\Uam\Aggregate\UserAggregateRepositoryInterface;
-use Bizlogics\Uam\UseCase\UserOperation\Login\AuthenticatableInterface;
 use Bizlogics\Uam\UseCase\UserOperation\Login\LoginUseCase;
+use Bizlogics\Uam\UseCase\AuthenticatableInterface;
 use Tests\BaseTestCase;
 
 class LoginUseCaseTest extends BaseTestCase

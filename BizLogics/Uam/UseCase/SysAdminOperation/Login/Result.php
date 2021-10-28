@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Bizlogics\Uam\UseCase\UserOperation\Login;
+namespace Bizlogics\Uam\UseCase\SysAdminOperation\Login;
 
 use Bizlogics\Uam\UseCase\AuthenticatableInterface;
 use RuntimeException;
