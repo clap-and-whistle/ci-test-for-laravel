@@ -56,7 +56,7 @@ class MyWorkControllerTest extends LaraTestCase
         ));
 
         $response = $this
-            ->actingAs($user, 'web')
+            ->actingAs($user, 'user')
             ->get(route(MyWorkController::URL_ROUTE_NAME));
         $response->assertStatus(200);
     }

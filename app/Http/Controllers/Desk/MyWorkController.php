@@ -24,12 +24,14 @@ final class MyWorkController extends Controller
 
     public function indexAction(): View|LaraRedirector|LaraRedirectResponse
     {
-        if (Auth::guest()) {
-            logger(__METHOD__, ['Auth::guest()', Auth::guest(), 'ログインセッション無し']);
+        $guard = Auth::guard('user');
+        if ($guard->guest()) {
+            logger(__METHOD__, ['$guard->guest()', $guard->guest(), 'ログインセッション無し']);
             return redirect('/e');
         }
+        logger(__METHOD__, ['$guard->id()', $guard->id()]);
 
-        $user = $this->userRepos->findById(Auth::id());
+        $user = $this->userRepos->findById($guard->id());
         if (is_null($user)) {
             logger(__METHOD__, ['User $user', $user, 'User集約インスタンスの構築に失敗']);
             return redirect('/e');

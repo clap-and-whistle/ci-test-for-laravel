@@ -27,6 +27,11 @@ final class AdminUser
         return new self($id, $email, $password, $accountStatus);
     }
 
+    public static function buildForFind(int $id, string $email, int $accountStatus): self
+    {
+        return new self($id, $email, '', $accountStatus);
+    }
+
     public function id(): int
     {
         return $this->id;
